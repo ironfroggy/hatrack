@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 //Lets require/import the HTTP module
 var child_process = require('child_process');
 var http = require('http');
@@ -187,10 +188,18 @@ function handleRequest(request, response){
 }
 
 //Create a server
-var server = http.createServer(handleRequest);
+var server;
 
-//Lets start our server
-server.listen(argv.port, function(){
-  //Callback triggered when server is successfully listening. Hurray!
-  console.log("Server listening on: http://localhost:%s", argv.port);
-});
+function run() {
+  server = http.createServer(handleRequest);
+  //Lets start our server
+  server.listen(argv.port, function(){
+    //Callback triggered when server is successfully listening. Hurray!
+    console.log("Server listening on: http://localhost:%s", argv.port);
+  });
+}
+if (require.main === module) {
+  run();
+} else {
+  module.exports.run = run;
+}
