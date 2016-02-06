@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node tempwork.js"
   },
+  "bin": {
+    "tempwork": "tempwork.js"
+  },
   "author": "Calvin Spealman <ironfroggy@gmail.com>",
   "license": "MIT",
   "dependencies": {
