@@ -126,6 +126,10 @@ function serveStatic(request, response, localPath) {
   });
 }
 
+function cleanHeaders(headers) {
+  return headers;
+}
+
 //We need a function which handles requests and send response
 function handleRequest(request, response){
   var workerName;
@@ -155,6 +159,7 @@ function handleRequest(request, response){
         // proxy port
         method: request.method,
         path: proxyUrl,
+        headers: cleanHeaders(request.headers),
     }, function (res) {
         res.on('data', function (data) {
             response.write(data);

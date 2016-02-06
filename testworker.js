@@ -16,6 +16,12 @@ function handleRequest(request, response){
         response.end('\nWorker worked');
       })
     } else {
+      for (var h in request.headers) {
+        response.write(h);
+        response.write(": ");
+        response.write(request.headers[h]);
+        response.write("\n");
+      }
       response.end('\nWorker worked');
     }
 }
