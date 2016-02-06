@@ -1,6 +1,6 @@
 {
   "name": "tempwork",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "A webserver to spawn temporary workers",
   "main": "tempwork.js",
   "scripts": {

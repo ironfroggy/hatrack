@@ -16,3 +16,24 @@ tempwork is a prototype, but has a short and robust time line:
 tempwork is useful if you build lots of mini-projects, want to host them all
 somewhere, but none of them will get traffic often enough to support running
 24/7.
+
+## Usage
+
+```
+npm install -g tempwork
+tempwork --config=tempwork.conf
+```
+
+Where `tempwork.conf` is a YAML file like this:
+
+```
+workers:
+  test_worker:
+    command: "node"
+    arguments:
+      - "testworker.js"
+    prefix: "test"
+    port_env: "PORT"
+  default:
+    static: "noservice.html"
+```
