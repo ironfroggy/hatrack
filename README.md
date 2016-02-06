@@ -37,3 +37,16 @@ workers:
   default:
     static: "noservice.html"
 ```
+
+`workers` defines one or more workers and must define a `"default"` worker.
+
+`command` is a command to run to launch the worker if it is not working, and
+will be run with the list of defined `arguments`.
+
+`prefix` is the URL prefix that will be routed to this worker. The worker will
+not see the prefix.
+
+`port_env` is an environment variable to launch the worker with defining what
+port number it should listen to.
+
+`static` defines a file the service should read instead of launching a worker.
