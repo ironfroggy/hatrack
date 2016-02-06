@@ -1,0 +1,9 @@
+workers:
+  test_worker:
+    command: "node"
+    arguments:
+      - "testworker.js"
+    prefix: "test"
+    port_env: "PORT"
+  default:
+    static: "noservice.html"
