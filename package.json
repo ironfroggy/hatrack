@@ -1,6 +1,6 @@
 {
   "name": "tempwork",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A webserver to spawn temporary workers",
   "main": "tempwork.js",
   "scripts": {
@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "ps-tree": "^1.0.1",
-    "yamljs": "^0.2.4"
+    "yamljs": "^0.2.4",
+    "yargs": "^3.32.0"
   }
 }

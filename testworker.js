@@ -1,12 +1,23 @@
 //Lets require/import the HTTP module
 var http = require('http');
+var process = require('process');
 
 //Lets define a port we want to listen to
-const PORT=8081;
+const PORT = process.env.PORT;
 
 //We need a function which handles requests and send response
 function handleRequest(request, response){
-    response.end('Worker worked');
+    response.write(request.method + "\n");
+    if (request.method === "POST") {
+      request.on('data', function(data) {
+        response.write(data);
+      });
+      request.on('end', function() {
+        response.end('\nWorker worked');
+      })
+    } else {
+      response.end('\nWorker worked');
+    }
 }
 
 //Create a server

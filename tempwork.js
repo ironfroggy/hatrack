@@ -6,14 +6,19 @@ var psTree = require('ps-tree');
 var path = require('path');
 var fs = require('fs');
 
+var argv = require('yargs')
+  .default('config',  "./config.yaml")
+  .default('address', 'localhost')
+  .default('port', 8080)
+  .argv;
+
 
 //Lets define a port we want to listen to
-const PORT=8080;
 const WORKER_PORT_MIN = 8081;
 const WORKER_PORT_MAX = 8100;
 const WORKER_CHECK_INTERVAL = 1000;
 const WORKER_TIMEOUT = 10 * 1000;
-const config = yaml.load('./config.yaml');
+const config = yaml.load(argv.config);
 const workers = {};
 const mimeTypes = {
   "html": "text/html",
@@ -159,11 +164,20 @@ function handleRequest(request, response){
           response.end('');
         });
     });
+    if (request.method === "POST") {
+      request.on('data', function(data){
+        req.write(data);
+      })
+      request.on('end', function() {
+        req.end();
+      })
+    } else {
+      req.end();
+    }
     req.on('error', function(e){
       console.log('ERROR ' + e);
       response.end('');
     });
-    req.end();
   }
 }
 
@@ -171,7 +185,7 @@ function handleRequest(request, response){
 var server = http.createServer(handleRequest);
 
 //Lets start our server
-server.listen(PORT, function(){
+server.listen(argv.port, function(){
   //Callback triggered when server is successfully listening. Hurray!
-  console.log("Server listening on: http://localhost:%s", PORT);
+  console.log("Server listening on: http://localhost:%s", argv.port);
 });
