@@ -74,7 +74,7 @@ function initializeWorker(name) {
 }
 function restartWorker(name) {
   var worker = workers[name];
-  var env = {};
+  var env = Object.assign(process.env);
   env[worker.port_env] = worker.port;
   worker.process = child_process.spawn(worker.command, worker.arguments, {
     env: env,
