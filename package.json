@@ -2,13 +2,13 @@
   "name": "tempwork",
   "version": "0.4.0",
   "description": "A webserver to spawn temporary workers",
-  "main": "tempwork.js",
+  "main": "tempwork/_main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node tempwork.js"
+    "start": "bin/tempwork"
   },
   "bin": {
-    "tempwork": "tempwork.js"
+    "tempwork": "bin/tempwork"
   },
   "author": "Calvin Spealman <ironfroggy@gmail.com>",
   "license": "MIT",

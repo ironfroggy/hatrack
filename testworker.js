@@ -22,7 +22,7 @@ function handleRequest(request, response){
         response.write(request.headers[h]);
         response.write("\n");
       }
-      response.end('\nWorker worked');
+      response.end('\nWorker worked?');
     }
 }
 
@@ -30,7 +30,9 @@ function handleRequest(request, response){
 var server = http.createServer(handleRequest);
 
 //Lets start our server
-server.listen(PORT, function(){
-    //Callback triggered when server is successfully listening. Hurray!
-    console.log("Server listening on: http://localhost:%s", PORT);
-});
+setTimeout(function(){
+    server.listen(PORT, function(){
+        //Callback triggered when server is successfully listening. Hurray!
+        console.log("Server listening on: http://localhost:%s", PORT);
+    });
+}, 2500)
