@@ -1,17 +1,22 @@
 var psTree = require('ps-tree');
 var child_process = require('child_process');
+var tilde = require('expand-tilde');
 var config = require('./config.js');
 
 const workers = {};
 const WORKER_CHECK_INTERVAL = 1000;
 
+process.on('uncaughtException', function(err) {
+  console.trace('Caught exception: ' + err);
+});
+
 var killWorkers = function() {
   for (var name in workers) {
-    if (workers[name]) {
+    if (workers[name] && workers[name].process) {
       try {
         process.kill(workers[name].process.pid);
       } catch (e) {
-        console.error("Error killing worker:", e, workers[name].process.pid);
+        console.trace("Error killing worker:", e, workers[name].process.pid);
       }
     }
   }
@@ -58,6 +63,7 @@ var kill = function (pid, signal, callback) {
 function initializeWorker(name) {
   var worker = config.workers[name];
   workers[name] = worker;
+  worker.name = name;
   if (worker.command) {
     worker.starting = true;
     worker.address = '127.0.0.1';
@@ -66,13 +72,46 @@ function initializeWorker(name) {
   }
   return worker;
 }
+
+function createEnv(worker) {
+  var env = Object.assign({}, process.env, worker.env);
+  var path = env.PATH.split(':');
+  for (var i=0; i < path.length; i++) {
+    path[i] = tilde(path[i]);
+  }
+  path = path.join(':');
+  env.PATH = `${process.env.PATH}:${path}`;
+  console.log(env.PATH);
+  return env;
+}
+
+function spawnWorkerProcess(worker) {
+  var opt = {
+    env: createEnv(worker),
+    cwd: tilde(worker.cwd || '.'),
+  };
+  var command = worker.command.trim();
+  var arguments = worker.arguments || [];
+  opt.env[worker.port_env] = worker.port;
+  if (command.match(' ')) {
+    if (arguments.length > 0) {
+      throw "Cannot define both a shell command and arguments list.";
+    }
+    worker.process = child_process.exec(tilde(command), opt);
+    // worker.process.stdout.on('data', (data) => {
+    //   console.log(`${worker.name} stdout: ${data}`);
+    // });
+    // worker.process.stderr.on('data', (data) => {
+    //   console.log(`${worker.name} stderr: ${data}`);
+    // });
+  } else {
+    worker.process = child_process.spawn(command, arguments, opt);
+  }
+}
+
 function restartWorker(name) {
   var worker = workers[name];
-  var env = Object.assign(process.env);
-  env[worker.port_env] = worker.port;
-  worker.process = child_process.spawn(worker.command, worker.arguments, {
-    env: env,
-  });
+  spawnWorkerProcess(worker);
   worker.lastTime = new Date();
   worker.starting = true;
   setTimeout(function(){

@@ -38,15 +38,25 @@ function serveStatic(request, response, localPath) {
 function handleRequest(request, response){
   var workerName;
   var proxyUrl;
+  var host = request.headers.host.match(/([-a-z\.]+):/)[1];
+  var port = request.headers.host.match(/:(\d+)/)[1];
+  console.log(request.headers.host, host, port);
+
   for (workerName in config.workers) {
     var workerPrefix = config.workers[workerName].prefix;
-    if (request.url.match("^/" + workerPrefix + "/") !== null) {
+    var workerHost = config.workers[workerName].host;
+    if (host === workerHost) {
+      console.log('routing for host', host, workerName);
+      proxyUrl = request.url;
+      break
+    } else if (request.url.match("^/" + workerPrefix + "/") !== null) {
       proxyUrl = request.url.slice(workerPrefix.length + 1, request.url.length);
       break;
     } else {
       console.log("!", request.url, workerPrefix);
     }
   }
+
   if (!proxyUrl) {
     workerName = "default";
     proxyUrl = "/";
@@ -67,7 +77,7 @@ var server;
 function run() {
   server = http.createServer(handleRequest);
   //Lets start our server
-  server.listen(config.port, function(){
+  server.listen(config.port, config.address, function(){
     //Callback triggered when server is successfully listening. Hurray!
     console.log("Server listening on: http://localhost:%s", config.port);
   });

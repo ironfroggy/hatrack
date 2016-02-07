@@ -1,6 +1,6 @@
 {
   "name": "tempwork",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "A webserver to spawn temporary workers",
   "main": "tempwork/_main.js",
   "scripts": {
@@ -13,6 +13,7 @@
   "author": "Calvin Spealman <ironfroggy@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "expand-tilde": "^1.2.0",
     "ps-tree": "^1.0.1",
     "yamljs": "^0.2.4",
     "yargs": "^3.32.0"
