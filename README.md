@@ -34,6 +34,12 @@ workers:
       - "testworker.js"
     prefix: "test"
     port_env: "PORT"
+  someproject:
+    host: "www.someproject.local"
+    cwd: "~/projects/someproject/"
+    env:
+      PATH: "~/.virtualenvs/someproject/bin/:~/projects/someproject/node_modules/.bin/"
+    command: "~/.virtualenvs/someproject/bin/python manage.py runserver $PORT"
   default:
     static: "noservice.html"
 ```
@@ -41,12 +47,19 @@ workers:
 `workers` defines one or more workers and must define a `"default"` worker.
 
 `command` is a command to run to launch the worker if it is not working, and
-will be run with the list of defined `arguments`.
+will be run with the list of defined `arguments`. If the command has space-separated
+arguments, it will be run with a shell and ignores the `arguments` option.
 
 `prefix` is the URL prefix that will be routed to this worker. The worker will
 not see the prefix.
 
 `port_env` is an environment variable to launch the worker with defining what
 port number it should listen to.
+
+`host` defines a hostname to route traffic from to the worker.
+
+`env` defines one or more environment variables for the command.
+
+`cwd` defines a current working directory to change to when running the worker.
 
 `static` defines a file the service should read instead of launching a worker.
