@@ -6,6 +6,7 @@ function cleanHeaders(headers) {
 }
 
 function proxyToWorker(request, response, worker, proxyUrl) {
+  worker.active = true;
   var req = http.request({
       host: worker.address,
       // proxy IP
@@ -20,6 +21,7 @@ function proxyToWorker(request, response, worker, proxyUrl) {
       });
       res.on('end', function(){
         console.log('DONE');
+        worker.active = false;
         response.end('');
       });
   });
