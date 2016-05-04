@@ -1,7 +1,7 @@
 var yaml = require('yamljs');
 
 var argv = require('yargs')
-  .default('config',  "./config.yaml")
+  .default('config',  "/usr/local/etc/tempwork.yaml")
   .argv;
 
 const configDefaults = {

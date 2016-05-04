@@ -81,7 +81,6 @@ function createEnv(worker) {
   }
   path = path.join(':');
   env.PATH = `${process.env.PATH}:${path}`;
-  console.log(env.PATH);
   return env;
 }
 
@@ -97,13 +96,14 @@ function spawnWorkerProcess(worker) {
     if (arguments.length > 0) {
       throw "Cannot define both a shell command and arguments list.";
     }
+    command = command.replace('$PORT', worker.port)
     worker.process = child_process.exec(tilde(command), opt);
-    // worker.process.stdout.on('data', (data) => {
-    //   console.log(`${worker.name} stdout: ${data}`);
-    // });
-    // worker.process.stderr.on('data', (data) => {
-    //   console.log(`${worker.name} stderr: ${data}`);
-    // });
+    worker.process.stdout.on('data', (data) => {
+      console.log(`${worker.name} stdout: ${data}`);
+    });
+    worker.process.stderr.on('data', (data) => {
+      console.log(`${worker.name} stderr: ${data}`);
+    });
   } else {
     worker.process = child_process.spawn(command, arguments, opt);
   }
