@@ -64,6 +64,7 @@ function initializeWorker(name) {
   var worker = config.workers[name];
   workers[name] = worker;
   worker.name = name;
+  worker.timeout = worker.timeout || config.worker_timeout
   if (worker.command) {
     worker.starting = true;
     worker.address = '127.0.0.1';
