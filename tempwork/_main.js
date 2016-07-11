@@ -21,16 +21,17 @@ function serveStatic(request, response, localPath) {
   var filename = path.join(process.cwd(), localPath);
   fs.exists(filename, function(exists) {
     if(!exists) {
-        console.log("not exists: " + filename);
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.write('404 Not Found\n');
-        response.end();
-    }
-    var mimeType = mimeTypes[path.extname(filename).split(".")[1]];
-    response.writeHead(200, mimeType);
+      console.log("not exists: " + filename);
+      response.writeHead(200, {'Content-Type': 'text/plain'});
+      response.write('404 Not Found\n');
+      response.end();
+    } else {
+      var mimeType = mimeTypes[path.extname(filename).split(".")[1]];
+      response.writeHead(200, mimeType);
 
-    var fileStream = fs.createReadStream(filename);
-    fileStream.pipe(response);
+      var fileStream = fs.createReadStream(filename);
+      fileStream.pipe(response);
+    }
   });
 }
 
