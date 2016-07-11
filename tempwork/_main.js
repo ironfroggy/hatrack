@@ -39,8 +39,9 @@ function serveStatic(request, response, localPath) {
 function handleRequest(request, response){
   var workerName;
   var proxyUrl;
-  var host = request.headers.host.match(/([-a-z\.]+):/)[1];
-  var port = request.headers.host.match(/:(\d+)/)[1];
+  var hostPieces = request.headers.host.match(/([^:]+):(\d+)/);
+  var host = hostPieces[1];
+  var port = hostPieces[2];
   console.log(request.headers.host, host, port);
 
   for (workerName in config.workers) {

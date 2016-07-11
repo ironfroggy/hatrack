@@ -69,6 +69,7 @@ function initializeWorker(name) {
     worker.starting = true;
     worker.address = '127.0.0.1';
     worker.port = next_port();
+    worker.active = false;
     restartWorker(name);
   }
   return worker;
@@ -115,6 +116,7 @@ function restartWorker(name) {
   spawnWorkerProcess(worker);
   worker.lastTime = new Date();
   worker.starting = true;
+  worker.active = false;
   setTimeout(function(){
     timeoutWorker(name);
   }, WORKER_CHECK_INTERVAL);
@@ -123,7 +125,7 @@ function restartWorker(name) {
 function timeoutWorker(name) {
   var worker = workers[name];
   var age = new Date() - worker.lastTime;
-  if (age > config.worker_timeout) {
+  if (age > config.worker_timeout && !worker.active) {
     console.log('KILL ' + worker.process.pid + " " + name);
     kill(worker.process.pid);
     worker.process = null;
