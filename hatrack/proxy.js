@@ -16,6 +16,9 @@ function proxyToWorker(request, response, worker, proxyUrl) {
       path: proxyUrl,
       headers: cleanHeaders(request.headers),
   }, function (res) {
+      Object.keys(res.headers).forEach((headerName)=>{
+        response.setHeader(headerName, res.headers[headerName])
+      })
       res.on('data', function (data) {
           response.write(data);
       });
