@@ -63,3 +63,48 @@ port number it should listen to.
 `cwd` defines a current working directory to change to when running the worker.
 
 `static` defines a file the service should read instead of launching a worker.
+
+
+### Recommended with DNSMasq
+
+The best way to use Hat Rack is combined with DNSMasq. You can configure your machine to route
+any domain ending in `.dev` to your `localhost`, which gives me easy to remember hostnames for
+all the local projects you run with Hat Rack. You'll be able to open your browser to
+`myproject.dev:8080` and Hat Rack will automatically spin up a development server for `myproject`
+to route the request to, and shut it down for you when it is no longer in use.
+
+#### Install and configure DNSMasq on OSX
+
+First, install DNSMasq via Brew.
+
+```
+brew up
+brew install dnsmasq
+```
+
+Once installed, create a simple configuration to listen at your localhost and bind all `.dev`
+domains to 127.0.0.1:
+
+```
+cat > /usr/local/etc/dnsmasq.conf
+listen-address=127.0.0.1
+bind-interfaces
+address=/.dev/127.0.0.1
+```
+
+Press Ctrl+C after pasting this command to complete the configuration file.
+
+Now, you'll want to configure DNSMasq to run at start up and to run it immediately:
+
+```
+sudo cp $(brew list dnsmasq | grep /homebrew.mxcl.dnsmasq.plist$) /Library/LaunchDaemons/
+sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+```
+
+Now that you've setup DNSMasq to respond to `.dev` domain resolutions, you need to tell your
+machine to resolve them through DNSMasq.
+
+```
+sudo mkdir -p /etc/resolver
+echo "nameserver 127.0.0.1" > /etc/resolver/dev
+```
