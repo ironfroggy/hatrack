@@ -108,3 +108,15 @@ machine to resolve them through DNSMasq.
 sudo mkdir -p /etc/resolver
 echo "nameserver 127.0.0.1" > /etc/resolver/dev
 ```
+
+#### Install and configure DNSMasq for Ubuntu
+
+Configure local wildcard DNS server
+
+1. Install Dnsmasq: `sudo apt-get install dnsmasq`
+2. Since Ubuntu's NetworkManager uses dnsmasq, and since that messes things up a little for us, open up `/etc/NetworkManager/NetworkManager.conf` and comment out (`#`) the line that reads `dns=dnsmasq`. Restart NetworkManager afterwards: `sudo restart network-manager`.
+3. Make sure Dnsmasq listens to local DNS queries by editing `/etc/dnsmasq.conf`, and adding the line `listen-address=127.0.0.1`.
+4. Create a new file in `/etc/dnsmasq.d` (eg. `/etc/dnsmasq.d/dev`), and add the line `address=/dev/127.0.0.1` to have dnsmasq resolve requests for *.dev domains. Restart Dnsmasq: `sudo /etc/init.d/dnsmasq restart`.
+
+
+source: http://brunodbo.be/blog/2013/04/setting-up-wildcard-apache-virtual-host-wildcard-dns
