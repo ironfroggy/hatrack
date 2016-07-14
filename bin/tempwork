@@ -1,2 +1,0 @@
-#!/usr/bin/env node
-require('../tempwork/_main.js').run()

@@ -1,19 +1,20 @@
 {
-  "name": "tempwork",
+  "name": "hatrack",
   "version": "0.7.1",
-  "description": "A webserver to spawn temporary workers",
-  "main": "tempwork/_main.js",
+  "description": "A tool for when your machine needs to wear many hats",
+  "main": "hatrack/_main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "bin/tempwork"
+    "start": "bin/hatrack"
   },
   "bin": {
-    "tempwork": "bin/tempwork"
+    "hatrack": "bin/hatrack"
   },
   "author": "Calvin Spealman <ironfroggy@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "expand-tilde": "^1.2.0",
+    "os-homedir": "^1.0.1",
     "ps-tree": "^1.0.1",
     "yamljs": "^0.2.4",
     "yargs": "^4.6.0"

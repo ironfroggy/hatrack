@@ -1,7 +1,9 @@
 var yaml = require('yamljs');
+var osHomedir = require('os-homedir');
+var join = require('path').join;
 
 var argv = require('yargs')
-  .default('config',  "/usr/local/etc/tempwork.yaml")
+  .default('config', join(osHomedir(), ".hatrack.yaml"))
   .argv;
 
 const configDefaults = {
