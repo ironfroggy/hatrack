@@ -100,6 +100,7 @@ function spawnWorkerProcess(worker) {
       throw "Cannot define both a shell command and arguments list.";
     }
     command = command.replace('$PORT', worker.port)
+    command = command.replace(/\$(\w+)/g, (whole, name) => (opt.env[name] || ""))
     worker.process = child_process.exec(tilde(command), opt);
     worker.process.stdout.on('data', (data) => {
       console.log(`${worker.name} stdout: ${data}`);
