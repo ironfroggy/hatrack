@@ -41,6 +41,17 @@ function proxyToWorker(request, response, worker, proxyUrl) {
   }
   var ctx = this;
   var proxyArgs = arguments;
+
+  // Setup proxy request timeout
+  req.on('socket', function (socket) {
+    socket.setTimeout(worker.proxy_timeout || config.timeout);
+    socket.on('timeout', function() {
+      console.log(`Request to worker ${worker.name} timed out. URL: ${proxyUrl}`);
+      req.abort();
+    });
+  });
+
+  // Handle request errors
   req.on('error', function(e){
     console.log('ERROR ' + e);
     // If the worker seems to not have started yet, give it another 1 second
@@ -48,8 +59,7 @@ function proxyToWorker(request, response, worker, proxyUrl) {
       console.log('try again in a second...');
       var t = (new Date() - worker.lastTime);
       var withinStartupTimeout = worker.starting && worker.startTimeout && t < worker.startTimeout
-      var withinTimeout = t < (worker.timeout || config.timeout)
-      if (withinTimeout || withinStartupTimeout) {
+      if (withinStartupTimeout) {
         setTimeout(() => proxyToWorker.apply(ctx, proxyArgs), 1000)
       } else {
         response.end('worker timeout');
