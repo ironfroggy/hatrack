@@ -1,5 +1,7 @@
 # hatrack
 
+![Hat Rack](//i.imgur.com/t9NbrzN.png)
+
 A simple server for launching mini-apps temporarily.
 
 hatrack will map URL prefixes to launch simple web service commands you
@@ -19,12 +21,14 @@ somewhere, but none of them will get traffic often enough to support running
 
 ## Usage
 
+First, install hatrack with NPM.
+
+
 ```
 npm install -g hatrack
-hatrack --config=hatrack.conf
 ```
 
-Where `hatrack.conf` is a YAML file like this:
+Hatrack will look for a configuration file at `~/.hatrack.yaml` is a YAML file like this:
 
 ```
 workers:
