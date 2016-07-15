@@ -30,10 +30,10 @@ function proxyToWorker(request, response, worker, proxyUrl) {
   });
   if (request.method === "POST") {
     request.on('data', function(data){
+      worker.starting = false;
       req.write(data);
     })
     request.on('end', function() {
-      worker.starting = false;
       req.end();
     })
   } else {
@@ -58,7 +58,8 @@ function proxyToWorker(request, response, worker, proxyUrl) {
     if (e.code === 'ECONNREFUSED' && worker.starting) {
       console.log('try again in a second...');
       var t = (new Date() - worker.lastTime);
-      var withinStartupTimeout = worker.starting && worker.startTimeout && t < worker.startTimeout
+      var startTimeout = worker.startTimeout || 1;
+      var withinStartupTimeout = worker.starting && startTimeout && t < startTimeout;
       if (withinStartupTimeout) {
         setTimeout(() => proxyToWorker.apply(ctx, proxyArgs), 1000)
       } else {
