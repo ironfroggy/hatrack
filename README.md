@@ -1,6 +1,6 @@
 # hatrack
 
-![Hat Rack](//i.imgur.com/t9NbrzN.png)
+![Hat Rack](https://i.imgur.com/t9NbrzN.png)
 
 A simple server for launching mini-apps temporarily.
 
