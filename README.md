@@ -124,3 +124,33 @@ Configure local wildcard DNS server
 
 
 source: http://brunodbo.be/blog/2013/04/setting-up-wildcard-apache-virtual-host-wildcard-dns
+
+
+#### Usage with DNSMasq and .dev domains
+
+Now that you've configured your machine to route all `.dev` domains locally, you can teach Hat Rack
+to serve up requests for each of your projects with an entry in the `~/.hatrack.yaml` configuration
+file.
+
+For example, this entry under `workers:` tells Hat Rack to serve requests to `www.ironfroggy.dev`
+by setting some environment variables, `cd`ing into my personal website's project directory,
+
+```
+www_dot_ironfroggy_dot_com:
+    host: "www.ironfroggy.dev"
+    cwd: "~/personal/www-ironfroggy-com/"
+    timeout: 15000
+    env:
+      VIRTUAL_ENV: "/Users/calvin/.virtualenvs/www-ironfroggy-com"
+      PATH: "~/.virtualenvs/www-ironfroggy-com/bin/"
+    command: "fab reserve:$PORT"
+```
+
+Here we configure:
+
+* `host`: What `.dev` domain do we handle with this configuration?
+* `cwd`: What directory does the project exist at?
+* `timeout`: How long do we leave the project running in between requests?
+* `env`: What environment variables are required to run this project?
+* `command`: What command can we use to run the project? This command *must* use `$PORT`, which
+   Hat Rack will provide.
