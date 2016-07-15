@@ -47,7 +47,9 @@ function proxyToWorker(request, response, worker, proxyUrl) {
     if (e.code === 'ECONNREFUSED' && worker.starting) {
       console.log('try again in a second...');
       var t = (new Date() - worker.lastTime);
-      if (t < (worker.timeout || config.timeout)) {
+      var withinStartupTimeout = worker.starting && worker.startTimeout && t < worker.startTimeout
+      var withinTimeout = t < (worker.timeout || config.timeout)
+      if (withinTimeout || withinStartupTimeout) {
         setTimeout(() => proxyToWorker.apply(ctx, proxyArgs), 1000)
       } else {
         response.end('worker timeout');

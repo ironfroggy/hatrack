@@ -67,6 +67,7 @@ function initializeWorker(name) {
   worker.timeout = worker.timeout || config.worker_timeout
   if (worker.command) {
     worker.starting = true;
+    worker.startTime = new Date();
     worker.address = '127.0.0.1';
     worker.port = next_port();
     worker.active = false;
