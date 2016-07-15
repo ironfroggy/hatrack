@@ -68,6 +68,10 @@ port number it should listen to.
 
 `static` defines a file the service should read instead of launching a worker.
 
+`timeout` defines how long a worker will be kept between usage before being terminated.
+
+`startTimeout` defines how long to wait for a worker to come online for the *first* request.
+
 
 ### Recommended with DNSMasq
 
