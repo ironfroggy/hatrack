@@ -152,5 +152,5 @@ Here we configure:
 * `cwd`: What directory does the project exist at?
 * `timeout`: How long do we leave the project running in between requests?
 * `env`: What environment variables are required to run this project?
-* `command`: What command can we use to run the project? This command *must* use `$PORT`, which
+* `command`: What command can we use to run the project? This command **must** use `$PORT`, which
    Hat Rack will provide.
