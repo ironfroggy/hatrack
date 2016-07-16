@@ -1,6 +1,6 @@
 {
   "name": "hatrack",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "description": "A tool for when your machine needs to wear many hats",
   "main": "hatrack/_main.js",
   "scripts": {
