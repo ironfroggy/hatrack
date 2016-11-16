@@ -16,14 +16,11 @@ function proxyToWorker(request, response, worker, proxyUrl) {
       path: proxyUrl,
       headers: cleanHeaders(request.headers),
   }, function (res) {
-      Object.keys(res.headers).forEach((headerName)=>{
-        response.setHeader(headerName, res.headers[headerName])
-      })
+      response.writeHead(res.statusCode, res.statusMessage, res.headers)
       res.on('data', function (data) {
           response.write(data);
       });
       res.on('end', function(){
-        console.log('DONE');
         worker.active = false;
         response.end('');
       });
@@ -44,19 +41,18 @@ function proxyToWorker(request, response, worker, proxyUrl) {
 
   // Setup proxy request timeout
   req.on('socket', function (socket) {
-    socket.setTimeout(worker.proxy_timeout || config.timeout);
+    socket.setTimeout(worker.proxyTimeout || config.timeout);
     socket.on('timeout', function() {
-      console.log(`Request to worker ${worker.name} timed out. URL: ${proxyUrl}`);
+      console.log(`Request to worker ${worker.name} timed out (${worker.proxyTimeout}). URL: ${proxyUrl}`);
       req.abort();
     });
   });
 
   // Handle request errors
   req.on('error', function(e){
-    console.log('ERROR ' + e);
     // If the worker seems to not have started yet, give it another 1 second
     if (e.code === 'ECONNREFUSED' && worker.starting) {
-      console.log('try again in a second...');
+      console.log(`${worker.name} waiting...`);
       var t = (new Date() - worker.lastTime);
       var startTimeout = worker.startTimeout || 1;
       var withinStartupTimeout = worker.starting && startTimeout && t < startTimeout;
@@ -66,6 +62,7 @@ function proxyToWorker(request, response, worker, proxyUrl) {
         response.end('worker timeout');
       }
     } else {
+      console.log(`${worker.name}(ERROR): ${e}`);
       response.end('');
     }
   });
